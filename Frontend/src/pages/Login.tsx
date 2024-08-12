@@ -3,7 +3,7 @@ import Input from "../components/common/Input";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
-import Dashboard from "../components/Dashboard";
+import Dashboard from "./Dashboard";
 import toast from "react-hot-toast";
 
 function Login() {
