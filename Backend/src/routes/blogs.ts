@@ -66,6 +66,7 @@ blogRoutes.post("/create-blog", async (c) => {
     data: {
       title: body.title,
       content: body.content,
+      published: body.published || false,
       authorId,
     },
   });
@@ -120,6 +121,13 @@ blogRoutes.get("/blogs/:id", async (c) => {
 
   const response = await prisma.post.findMany({
     where: { id: blogId },
+    select: {
+      author: true,
+      title: true,
+      id: true,
+      content: true,
+      published: true,
+    },
   });
 
   return c.json({
