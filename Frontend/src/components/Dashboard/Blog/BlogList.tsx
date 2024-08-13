@@ -34,7 +34,7 @@ function BlogList() {
   return (
     <div>
       {data.length === 0 ? (
-        <h2>No Blog Here</h2>
+        <h2 className = "text-center">No Blog Here</h2>
       ) : (
         <div className="p-8 flex flex-col gap-4">
           {data.map((newData: getBlogData) => (
