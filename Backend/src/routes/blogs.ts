@@ -159,9 +159,63 @@ blogRoutes.get("/user-blog", async (c) => {
     where: { authorId },
   });
 
-  console.log(response);
-
   return c.json({
     response,
   });
+});
+
+blogRoutes.delete("/delete", async (c) => {
+  const userId = c.get("userId");
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const body = await c.req.json();
+
+    if (body.blogId === "") {
+      c.status(404);
+      return c.json({
+        message: "Blog id is empty",
+      });
+    }
+
+    const useResponse = await prisma.post.findUnique({
+      where: {
+        authorId: userId,
+        id: body.blogId,
+      },
+    });
+
+    if (!useResponse) {
+      c.status(406);
+      return c.json({
+        message: "It is not your blog",
+      });
+    }
+
+    const response = await prisma.post.delete({
+      where: {
+        authorId: userId,
+        id: body.blogId,
+      },
+    });
+
+    if (!response) {
+      c.status(404);
+      return c.json({
+        message: "It's not your blog",
+      });
+    }
+
+    c.status(200);
+    return c.json({
+      message: "Blog Deleted Successfully!",
+    });
+  } catch (error) {
+    c.status(500);
+    return c.json({
+      message: "Something went wrong while delete blog",
+    });
+  }
 });
